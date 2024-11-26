@@ -145,22 +145,22 @@
 
           $.each(data, function(index, quiz) {
             let no = index + 1;
-            quizListHtml += `
+            quizListHtml += 
               <div class="card quiz-card">
                 <div class="card-body">
                   <h5 class="card-title">ข้อที่ ${no}</h5>
                   <p class="card-text">${quiz.title}</p>
                   <div class="form-group">
-            `;
+            ;
 
             // Quiz options
             $.each(quiz.options, function(optionIndex, option) {
-              quizListHtml += `
+              quizListHtml += 
                 <div class="form-check">
                   <input class="form-check-input quiz-option" type="radio" name="q${no}" value="${optionIndex + 1}">
                   <label class="form-check-label">${option}</label>
                 </div>
-              `;
+              ;
             });
 
             quizListHtml += "</div></div></div>";
@@ -179,13 +179,13 @@
       function checkAllAnswered() {
         let answered = 0;
         for (let i = 1; i <= totalQuestions; i++) {
-          if ($(`input[name='q${i}']:checked`).length > 0) {
+          if ($(input[name='q${i}']:checked).length > 0) {
             answered++;
           }
         }
 
         let progress = Math.round((answered / totalQuestions) * 100);
-        $("#progressBar").css("width", `${progress}%`).text(`${progress}%`);
+        $("#progressBar").css("width", ${progress}%).text(${progress}%);
 
         if (answered === totalQuestions) {
           $("#btnCheckAnswer").prop("disabled", false);
@@ -201,21 +201,21 @@
 
           $.each(data, function(index, quiz) {
             let no = index + 1;
-            let selectedAnswer = $(`input[name='q${no}']:checked`).val();
+            let selectedAnswer = $(input[name='q${no}']:checked).val();
             userAnswers.push(parseInt(selectedAnswer));
 
             if (parseInt(selectedAnswer) === quiz.answer) {
               score++;
-              answerDetailsHtml += `
+              answerDetailsHtml += 
                 <div class="card mt-3">
                   <div class="card-body">
                     <h5 class="card-title">ข้อที่ ${no} - Correct</h5>
                     <p class="answer-correct">Your Answer: ${quiz.options[selectedAnswer - 1]}</p>
                   </div>
                 </div>
-              `;
+              ;
             } else {
-              answerDetailsHtml += `
+              answerDetailsHtml += 
                 <div class="card mt-3">
                   <div class="card-body">
                     <h5 class="card-title">ข้อที่ ${no} - Incorrect</h5>
@@ -223,15 +223,15 @@
                     <p class="answer-explanation">Correct Answer: ${quiz.options[quiz.answer - 1]}</p>
                   </div>
                 </div>
-              `;
+              ;
             }
           });
 
           // Display score and answer explanations
-          $("#resultBox").html(`
+          $("#resultBox").html(
             <div class="result-box">Your Score: ${score}/${totalQuestions}</div>
             ${answerDetailsHtml}
-          `);
+          );
         });
       });
     });
