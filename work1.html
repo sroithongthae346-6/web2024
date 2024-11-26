@@ -16,7 +16,7 @@
       padding: 0;
     }
     .header {
-      background-color: #007bff;
+      background-color: #FF9999;
       color: white;
       padding: 40px 0;
       text-align: center;
@@ -71,11 +71,11 @@
       margin-top: 30px;
     }
     .btn-primary {
-      background-color: #007bff;
+      background-color: #FF6699;
       border: none;
     }
     .btn-primary:hover {
-      background-color: #0056b3;
+      background-color: #FF6699;
     }
     .progress {
       height: 20px;
@@ -112,16 +112,11 @@
           <p class="fs-4 mb-4">Welcome to the quiz! Click the button below to begin.</p>
           <button class="btn btn-primary btn-lg" id="btnStart">Start Quiz</button>
         </div>
-        
+      
         <!-- Quiz Box -->
         <div id="quizBox" style="display:none;">
           <div id="quizListBox"></div>
           <button class="btn btn-primary btn-lg mt-4" id="btnCheckAnswer" disabled>Check Answers</button>
-          
-          <!-- Progress Bar -->
-          <div class="progress mt-4">
-            <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%">0%</div>
-          </div>
           
           <!-- Result Box -->
           <div id="resultBox" class="mt-4"></div>
@@ -129,7 +124,7 @@
       </div>
     </div>
   </div>
-
+  
   <script>
     $(function() {
       let totalQuestions = 0;
@@ -153,7 +148,7 @@
             quizListHtml += `
               <div class="card quiz-card">
                 <div class="card-body">
-                  <h5 class="card-title">Question ${no}</h5>
+                  <h5 class="card-title">ข้อที่ ${no}</h5>
                   <p class="card-text">${quiz.title}</p>
                   <div class="form-group">
             `;
@@ -214,9 +209,8 @@
               answerDetailsHtml += `
                 <div class="card mt-3">
                   <div class="card-body">
-                    <h5 class="card-title">Question ${no} - Correct</h5>
+                    <h5 class="card-title">ข้อที่ ${no} - Correct</h5>
                     <p class="answer-correct">Your Answer: ${quiz.options[selectedAnswer - 1]}</p>
-                    <p class="answer-explanation">Explanation: ${quiz.explanation}</p>
                   </div>
                 </div>
               `;
@@ -224,10 +218,9 @@
               answerDetailsHtml += `
                 <div class="card mt-3">
                   <div class="card-body">
-                    <h5 class="card-title">Question ${no} - Incorrect</h5>
+                    <h5 class="card-title">ข้อที่ ${no} - Incorrect</h5>
                     <p class="answer-incorrect">Your Answer: ${quiz.options[selectedAnswer - 1]}</p>
                     <p class="answer-explanation">Correct Answer: ${quiz.options[quiz.answer - 1]}</p>
-                    <p class="answer-explanation">Explanation: ${quiz.explanation}</p>
                   </div>
                 </div>
               `;
