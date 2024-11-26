@@ -145,22 +145,22 @@
 
           $.each(data, function(index, quiz) {
             let no = index + 1;
-            quizListHtml += 
+            quizListHtml += `
               <div class="card quiz-card">
                 <div class="card-body">
                   <h5 class="card-title">ข้อที่ ${no}</h5>
                   <p class="card-text">${quiz.title}</p>
                   <div class="form-group">
-            ;
+            `;
 
             // Quiz options
             $.each(quiz.options, function(optionIndex, option) {
-              quizListHtml += 
+              quizListHtml += `
                 <div class="form-check">
                   <input class="form-check-input quiz-option" type="radio" name="q${no}" value="${optionIndex + 1}">
                   <label class="form-check-label">${option}</label>
                 </div>
-              ;
+              `;
             });
 
             quizListHtml += "</div></div></div>";
@@ -179,60 +179,72 @@
       function checkAllAnswered() {
         let answered = 0;
         for (let i = 1; i <= totalQuestions; i++) {
-          if ($(input[name='q${i}']:checked).length > 0) {
+          if ($(`input[name='q${i}']:checked`).length > 0) {
             answered++;
           }
         }
 
         let progress = Math.round((answered / totalQuestions) * 100);
-        $("#progressBar").css("width", ${progress}%).text(${progress}%);
 
         if (answered === totalQuestions) {
           $("#btnCheckAnswer").prop("disabled", false);
+        } else {
+          $("#btnCheckAnswer").prop("disabled", true);
         }
       }
 
-      // Check answers and display score with explanation
+      // Show alert if not all questions are answered when checking answers
       $("#btnCheckAnswer").click(function() {
-        $.getJSON("quiz1.json", function(data) {
-          let score = 0;
-          let answerDetailsHtml = "";
-          userAnswers = []; // Reset user answers for each attempt
+        let unansweredQuestions = [];
+        for (let i = 1; i <= totalQuestions; i++) {
+          if ($(`input[name='q${i}']:checked`).length === 0) {
+            unansweredQuestions.push(i);
+          }
+        }
 
-          $.each(data, function(index, quiz) {
-            let no = index + 1;
-            let selectedAnswer = $(input[name='q${no}']:checked).val();
-            userAnswers.push(parseInt(selectedAnswer));
+        if (unansweredQuestions.length > 0) {
+          alert("คุณยังไม่ได้ทำข้อที่: " + unansweredQuestions.join(", "));
+        } else {
+          $.getJSON("quiz1.json", function(data) {
+            let score = 0;
+            let answerDetailsHtml = "";
+            userAnswers = []; // Reset user answers for each attempt
 
-            if (parseInt(selectedAnswer) === quiz.answer) {
-              score++;
-              answerDetailsHtml += 
-                <div class="card mt-3">
-                  <div class="card-body">
-                    <h5 class="card-title">ข้อที่ ${no} - Correct</h5>
-                    <p class="answer-correct">Your Answer: ${quiz.options[selectedAnswer - 1]}</p>
+            $.each(data, function(index, quiz) {
+              let no = index + 1;
+              let selectedAnswer = $(`input[name='q${no}']:checked`).val();
+              userAnswers.push(parseInt(selectedAnswer));
+
+              if (parseInt(selectedAnswer) === quiz.answer) {
+                score++;
+                answerDetailsHtml += `
+                  <div class="card mt-3">
+                    <div class="card-body">
+                      <h5 class="card-title">ข้อที่ ${no} - Correct</h5>
+                      <p class="answer-correct">Your Answer: ${quiz.options[selectedAnswer - 1]}</p>
+                    </div>
                   </div>
-                </div>
-              ;
-            } else {
-              answerDetailsHtml += 
-                <div class="card mt-3">
-                  <div class="card-body">
-                    <h5 class="card-title">ข้อที่ ${no} - Incorrect</h5>
-                    <p class="answer-incorrect">Your Answer: ${quiz.options[selectedAnswer - 1]}</p>
-                    <p class="answer-explanation">Correct Answer: ${quiz.options[quiz.answer - 1]}</p>
+                `;
+              } else {
+                answerDetailsHtml += `
+                  <div class="card mt-3">
+                    <div class="card-body">
+                      <h5 class="card-title">ข้อที่ ${no} - Incorrect</h5>
+                      <p class="answer-incorrect">Your Answer: ${quiz.options[selectedAnswer - 1]}</p>
+                      <p class="answer-explanation">Correct Answer: ${quiz.options[quiz.answer - 1]}</p>
+                    </div>
                   </div>
-                </div>
-              ;
-            }
+                `;
+              }
+            });
+
+            // Display score and answer explanations
+            $("#resultBox").html(`
+              <div class="result-box">Your Score: ${score}/${totalQuestions}</div>
+              ${answerDetailsHtml}
+            `);
           });
-
-          // Display score and answer explanations
-          $("#resultBox").html(
-            <div class="result-box">Your Score: ${score}/${totalQuestions}</div>
-            ${answerDetailsHtml}
-          );
-        });
+        }
       });
     });
   </script>
