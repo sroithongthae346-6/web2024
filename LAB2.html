@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAB 2 - แบบทดสอบ</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@3.7.4/dist/vuetify.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@3.7.4/dist/vuetify.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Mali&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Mali', sans-serif;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #ffd26b;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            font-size: 2rem;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #ffd26b;
+            color: white;
+            text-align: center;
+            padding: 0.5rem;
+        }
+        .intro-text {
+    text-align: center;
+    padding: 2rem;
+    background-color: #fffbe7;
+    margin: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.intro-text h2 {
+    font-size: 2rem;
+    color: #ff6f61; 
+    margin-bottom: 1rem;
+}
+
+.intro-text p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.intro-text v-btn {
+    margin-top: 1.5rem;
+    padding: 10px 20px;
+}
+
+    </style>
+</head>
+<body>
+    <div class="header">แบบทดสอบ</div>
+    <div id="app">
+        <v-app>
+            <div v-if="page === 1">
+                <div class="intro-text">
+                    <h2>ยินดีต้อนรับสู่แบบทดสอบ</h2>
+                    <p>แบบทดสอบนี้เป็นแบบทดสอบวิทยาศาสตร์พื้นฐาน จำนวน 20 ข้อ</p>
+                    <p>กรุณาอ่านคำถามและเลือกคำตอบที่ถูกต้องที่สุด</p>
+                    <v-btn @click="page = 2; shuffleOptions();" color="primary" large>เริ่มทำแบบทดสอบ</v-btn>
+                </div>
+            </div>
+            
+            <div v-if="page === 2">
+                <div v-for="(q, i) in qlist" :key="i" class="question-box">
+                    <b>ข้อที่ {{ i + 1 }}</b>
+                    <div v-html="q.title" class="pa-2"></div>
+                    <div class="d-flex flex-column">
+                        <v-btn
+                            v-for="(otxt, ov) in q.options"
+                            :key="ov"
+                            class="v-btn-option"
+                            :color="answers[i] === ov + 1 ? 'primary' : 'secondary'"
+                            @click="answers[i] = ov + 1"
+                            elevation="2"
+                        >
+                            {{ ov + 1 }}. {{ otxt }}
+                        </v-btn>
+                    </div>
+                </div>
+                <div class="text-center pa-4">
+                    <v-btn v-if="validate()" color="success" @click="grading">ตรวจคำตอบ</v-btn>
+                    <span v-else class="text-danger">กรุณาตอบคำถามให้ครบ</span>
+                </div>
+            </div>
+            <div v-if="page === 3" class="text-center pa-4">
+                <h2>ผลการทดสอบ</h2>
+                <h3>คุณได้คะแนน: {{ score }}/{{ qlist.length }}</h3>
+                <v-btn color="primary" @click="resetQuiz">เริ่มใหม่</v-btn>
+            </div>
+        </v-app>
+    </div>
+
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    qlist: [],
+                    answers: [],
+                    score: 0,
+                    page: 1,
+                };
+            },
+            mounted() {
+                this.load_data();
+            },
+            methods: {
+                async load_data() {
+                    try {
+                        const res = await fetch("LAB2_quiz.json");
+                        this.qlist = await res.json();
+                        this.shuffleOptions();
+                    } catch (error) {
+                        console.error("Failed to load quiz data:", error);
+                    }
+                },
+                shuffleOptions() {
+                    // Shuffle options for each question
+                    this.qlist.forEach(q => {
+                        q.options = q.options.sort(() => Math.random() - 0.5);
+                    });
+                },
+                validate() {
+                    return this.answers.length === this.qlist.length && this.answers.every(a => a);
+                },
+                grading() {
+                    this.score = this.qlist.reduce((sum, q, i) => {
+                        return sum + (this.answers[i] == q.answer ? 1 : 0);
+                    }, 0);
+                    this.page = 3;
+                },
+                resetQuiz() {
+                    this.answers = [];
+                    this.score = 0;
+                    this.page = 1;
+                },
+            },
+        });
+
+        const vuetify = Vuetify.createVuetify();
+        app.use(vuetify).mount("#app");
+    </script>
+</body>
+</html>
