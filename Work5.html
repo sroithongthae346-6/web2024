@@ -1,5 +1,62 @@
-<Text style={styles.big}>Work 5 </Text>
-<div data-snack-id="@sroithongthae/work5-1" data-snack-platform="web" data-snack-preview="true" data-snack-theme="light" style="overflow:hidden;background:#fbfcfd;border:1px solid var(--color-border);border-radius:4px;height:505px;width:100%"></div>
-<script async src="https://snack.expo.dev/embed.js"></script>
+import React from 'react';
+import { StyleSheet, Text, View, Video } from 'react-native';
 
-<Video source={{uri: 'https://youtube.com/shorts/BansF82Etgg?feature=share/video.mp4'}} style={styles.backgroundVideo} </Video>
+const Work5 = () => {
+  return (
+    <View style={styles.container}>
+      {/* ส่วนของข้อความ */}
+      <Text style={styles.big}>Work 5</Text>
+
+      {/* ส่วนของ Embed Snack */}
+      <div
+        data-snack-id="@sroithongthae/work5-1"
+        data-snack-platform="web"
+        data-snack-preview="true"
+        data-snack-theme="light"
+        style={styles.snackEmbed}
+      ></div>
+      <script async src="https://snack.expo.dev/embed.js"></script>
+
+      {/* ส่วนของวิดีโอ */}
+      <Video
+        source={{
+          uri: 'https://youtube.com/shorts/BansF82Etgg?feature=share/video.mp4',
+        }}
+        style={styles.backgroundVideo}
+        resizeMode="cover"
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fbfcfd',
+    padding: 20,
+  },
+  big: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 20,
+  },
+  snackEmbed: {
+    overflow: 'hidden',
+    backgroundColor: '#fbfcfd',
+    border: '1px solid #ccc',
+    borderRadius: 8,
+    height: 505,
+    width: '100%',
+    marginBottom: 20,
+  },
+  backgroundVideo: {
+    width: '100%',
+    height: 250,
+    borderRadius: 8,
+    marginTop: 20,
+  },
+});
+
+export default Work5;
+
